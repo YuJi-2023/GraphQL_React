@@ -1,7 +1,5 @@
-const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 3000;
-const userData = require("./MOCK_DATA.json");
+const userData = require("../MOCK_DATA.json");
+const UserType = require("./TypeDefs/UserType");
 const graphql = require("graphql");
 const {
   GraphQLObjectType,
@@ -9,19 +7,6 @@ const {
   GraphQLString,
   GraphQLList,
 } = require("graphql");
-const { graphqlHTTP } = require("express-graphql");
-
-//create user type
-const UserType = new GraphQLObjectType({
-  name: "User",
-  fields: () => ({
-    id: { type: GraphQLInt },
-    firstName: { type: GraphQLString },
-    lastName: { type: GraphQLString },
-    email: { type: GraphQLString },
-    password: { type: GraphQLString },
-  }),
-});
 
 //create query and mutation viarables for creating types
 const RootQuery = new GraphQLObjectType({
@@ -62,19 +47,7 @@ const Mutation = new GraphQLObjectType({
 });
 
 //create schema
-const schema = new graphql.GraphQLSchema({
+module.exports = new graphql.GraphQLSchema({
   query: RootQuery,
   mutation: Mutation,
-});
-
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-    graphiql: true,
-  })
-);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
 });
