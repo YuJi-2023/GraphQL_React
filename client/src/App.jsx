@@ -1,6 +1,7 @@
 import './App.css';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
+import GetUser from './Components/GetUser';
 
 // create an instance of Apollo client
 const errorLink = onError(({ graphqlErrors, networkError }) => {
@@ -26,8 +27,11 @@ function App() {
 
   return (
     //wrap app with ApolloProvider and pass in the previously defined client 
-    <ApolloProvider client={client}></ApolloProvider>
+    <ApolloProvider client={client}>
+      {" "}
+      <GetUser/>
+    </ApolloProvider>
   )
 }
 
-export default App
+export default App;
