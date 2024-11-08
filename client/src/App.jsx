@@ -30,9 +30,12 @@ function App() {
     //wrap app with ApolloProvider and pass in the previously defined client 
     <ApolloProvider client={client}>
       {" "}
-      {/* <GetUser/> */}
+      <h1>Create a new user</h1>
       <CreateUser />
+      <h1>Get all users</h1>
+      <GetUser/>
     </ApolloProvider>
+   
   )
 }
 
