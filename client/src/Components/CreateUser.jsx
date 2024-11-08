@@ -7,24 +7,33 @@ function CreateUser() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null); 
 
-  const [createUser, { error }] = useMutation(CREATE_USER_MUTATION);
-  
-  // Define the addUser function, if needed in future implementation.
-  const addUser = () => {
-    // Logic for adding a user, possibly using the useMutation hook with CREATE_USER_MUTATION
-    createUser({
-      variables: {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password
-      }
-    })
-    // if (error) {
-    //   console.log(error);
-    // }
-    console.log("User created:", { firstName, lastName, email, password });
+  const [createUser] = useMutation(CREATE_USER_MUTATION);
+
+  const addUser = async () => {
+    // Basic validation to check if fields are filled
+    if (!firstName || !lastName || !email || !password) {
+      setErrorMessage("All fields are required.");
+      return;
+    }
+
+    try {
+      const { data } = await createUser({
+        variables: {
+          firstName,
+          lastName,
+          email,
+          password
+        }
+      });
+      console.log("User created:", data);
+      setErrorMessage(null); // Clear any previous error messages
+    } catch (err) {
+      // Set a user-friendly error message
+      setErrorMessage("Failed to create user. Please try again.");
+      console.error("Error details:", err);
+    }
   };
 
   return (
@@ -35,6 +44,7 @@ function CreateUser() {
           <input 
             name="firstName"
             placeholder="First Name" 
+            value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
           />
         </label>
@@ -45,6 +55,7 @@ function CreateUser() {
           <input 
             name="lastName"
             placeholder="Last Name" 
+            value={lastName}
             onChange={(e) => setLastName(e.target.value)}
           />
         </label>
@@ -55,6 +66,7 @@ function CreateUser() {
           <input 
             name="email"
             placeholder="Email" 
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
@@ -64,12 +76,17 @@ function CreateUser() {
           Password:
           <input 
             name="password"
+            type="password"
             placeholder="Password" 
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
       </div>
-      <button type="button" onClick={ addUser }>Create A User</button>
+      <button type="button" onClick={addUser}>Create A User</button>
+
+      {/* Display error message if any */}
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </>
   );
 }
